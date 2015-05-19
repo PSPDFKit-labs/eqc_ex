@@ -43,6 +43,12 @@ defmodule EQC.StateM do
                                env)
   end
 
+  def pretty_aggregate_commands(mod, cmds, run_result) do
+    :eqc.aggregate(:eqc.with_title(:Commands), :eqc_statem.command_names(cmds),
+      :eqc.aggregate(:eqc.with_title(:Features), :eqc_statem.call_features(run_result[:history]),
+        pretty_commands(mod, cmds, run_result, run_result[:result] == :ok)))
+  end
+
   defmacro weight(state, cmds) do
     for {cmd, w} <- cmds do
       quote do
